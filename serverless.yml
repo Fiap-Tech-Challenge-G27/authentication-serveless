@@ -4,6 +4,18 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
+  stage: dev
+  environment:
+    DATABASE: ${self:custom.secrets.DATABASE}
+    USER: ${self:custom.secrets.USER}
+    PASSWORD: ${self:custom.secrets.PASSWORD}
+    POSTGRES_HOST: ${self:custom.secrets.POSTGRES_HOST}
+    POSTGRES_PORT: ${self:custom.secrets.POSTGRES_PORT}
+    JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
+custom:
+  secrets: ${file(secrets.json)}
+  serverlessPluginTypescript:
+    tsConfigFileLocation: './tsconfig.build.json'
 
 functions:
   api:
@@ -17,7 +29,4 @@ functions:
                 application/json: ${file(./schemas/auth.json)}
 plugins:
   - serverless-offline
-
-
-# org: hiagofss
-# app: auth-function
+  - serverless-plugin-typescript
